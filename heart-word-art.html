@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>I Wanna Be Yours</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, #6a3d9e 0%, #4a2470 45%, #2c1245 100%);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sparkle {
+    position: fixed;
+    background: #e8cfff;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: twinkle ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .title {
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    z-index: 2;
+    background: linear-gradient(90deg, #f0d9ff 0%, #ffffff 25%, #f0d9ff 50%, #ffffff 75%, #f0d9ff 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerText 4s linear infinite;
+  }
+
+  @keyframes shimmerText {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  .subtitle {
+    color: #c084ea;
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 30px;
+    opacity: 0.7;
+    z-index: 2;
+  }
+
+  .heart-word-container {
+    position: relative;
+    width: 420px;
+    max-width: 92vw;
+    height: 380px;
+    z-index: 2;
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .heart-outline-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .heart-outline-path {
+    fill: none;
+    stroke: url(#heartGrad);
+    stroke-width: 2;
+    stroke-linecap: round;
+    animation: drawHeart 2.5s ease forwards, glowPulseOutline 2.5s ease-in-out infinite 2.5s;
+    filter: drop-shadow(0 0 6px rgba(200, 130, 240, 0.7));
+  }
+
+  @keyframes drawHeart {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes glowPulseOutline {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .heart-word-container span {
+    position: absolute;
+    color: #ffffff;
+    font-weight: 700;
+    white-space: nowrap;
+    opacity: 0;
+    animation: wordFadeIn 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1) forwards, wordFloat 3.5s ease-in-out infinite, wordGlow 2.8s ease-in-out infinite;
+  }
+
+  @keyframes wordFadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.2) rotate(-15deg); }
+    60% { opacity: 1; }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  }
+
+  @keyframes wordFloat {
+    0%, 100% { margin-top: 0px; }
+    50% { margin-top: -8px; }
+  }
+
+  @keyframes wordGlow {
+    0%, 100% { text-shadow: 0 2px 8px rgba(155, 79, 217, 0.5); }
+    50% { text-shadow: 0 2px 16px rgba(200, 130, 240, 0.95); }
+  }
+
+  .signature {
+    color: #e0c3f5;
+    font-size: 14px;
+    font-style: italic;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeInSig 1s ease forwards;
+    animation-delay: 11s;
+    z-index: 2;
+  }
+
+  @keyframes fadeInSig {
+    from { opacity: 0; }
+    to { opacity: 0.85; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="title">I Wanna Be Yours</div>
+  <div class="subtitle">— inspired by the song</div>
+
+  <div class="heart-word-container" id="heartWords">
+    <svg class="heart-outline-svg" id="heartSvg" viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0c3f5"/>
+          <stop offset="50%" stop-color="#c084ea"/>
+          <stop offset="100%" stop-color="#9b4fd9"/>
+        </linearGradient>
+      </defs>
+      <path class="heart-outline-path" id="heartPath" d=""/>
+    </svg>
+  </div>
+
+  <div class="signature">forever, and always yours 💜</div>
+
+  <script>
+    // Word bank - original phrases, not song lyrics
+    const words = [
+      "always", "forever", "yours", "truly", "completely",
+      "my heart", "belongs", "to you", "endlessly", "devoted",
+      "I promise", "to stay", "by your side", "through it all",
+      "yours", "and only", "yours", "no matter", "what comes",
+      "I choose you", "every day", "again", "and again",
+      "wholly", "yours", "till the end", "of time",
+      "my love", "my everything", "close to you", "gently",
+      "sincerely", "with you", "always near", "just yours",
+      "my whole heart", "for you", "only you", "with love"
+    ];
+
+    const container = document.getElementById('heartWords');
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
+
+    // Heart parametric curve (classic heart curve, t from 0 to 2*PI)
+    function heartPoint(t) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      return { x, y };
+    }
+
+    // Determine bounds of the raw curve so we can scale it to fit the container with padding
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    const sampleCount = 200;
+    for (let i = 0; i <= sampleCount; i++) {
+      const t = (i / sampleCount) * Math.PI * 2;
+      const p = heartPoint(t);
+      minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+      minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+    }
+    const curveW = maxX - minX;
+    const curveH = maxY - minY;
+
+    const padding = 60; // keep words/outline away from container edges
+    const availW = w - padding * 2;
+    const availH = h - padding * 2;
+    const fitScale = Math.min(availW / curveW, availH / curveH);
+
+    // Proper center offset: we want curve's own center to map to container's center
+    const curveCenterX = (minX + maxX) / 2;
+    const curveCenterY = (minY + maxY) / 2;
+
+    function toScreen(pt, radiusFactor) {
+      radiusFactor = radiusFactor === undefined ? 1 : radiusFactor;
+      const px = (pt.x - curveCenterX) * fitScale * radiusFactor;
+      const py = (pt.y - curveCenterY) * fitScale * radiusFactor;
+      return { x: w / 2 + px, y: h / 2 + py };
+    }
+
+    // Build the SVG outline path using the same function/scale (radiusFactor = 1, the true outline)
+    let pathD = '';
+    const pathSamples = 120;
+    for (let i = 0; i <= pathSamples; i++) {
+      const t = (i / pathSamples) * Math.PI * 2;
+      const p = heartPoint(t);
+      const s = toScreen(p, 1);
+      pathD += (i === 0 ? 'M ' : 'L ') + s.x.toFixed(1) + ',' + s.y.toFixed(1) + ' ';
+    }
+    pathD += 'Z';
+    document.getElementById('heartPath').setAttribute('d', pathD);
+
+    // Approximate path length for the draw animation (rough, based on bounding box)
+    const approxLength = 2 * (curveW + curveH) * fitScale * 1.3;
+    const pathEl = document.getElementById('heartPath');
+    pathEl.style.strokeDasharray = approxLength;
+    pathEl.style.strokeDashoffset = approxLength;
+
+    const totalPoints = 50;
+    const outlineCount = Math.floor(totalPoints * 0.5);
+    const fillCount = totalPoints - outlineCount;
+
+    const placedPositions = [];
+    const minDistance = 36;
+
+    function isFarEnough(x, y) {
+      for (const p of placedPositions) {
+        const dx = x - p.x;
+        const dy = y - p.y;
+        if (Math.sqrt(dx * dx + dy * dy) < minDistance) return false;
+      }
+      return true;
+    }
+
+    function tryPlace(baseX, baseY, word, fontSize, opacity, color, delay) {
+      let x = baseX, y = baseY;
+      let attempts = 0;
+      while (!isFarEnough(x, y) && attempts < 15) {
+        x = baseX + (Math.random() - 0.5) * 22;
+        y = baseY + (Math.random() - 0.5) * 22;
+        attempts++;
+      }
+      if (!isFarEnough(x, y)) return false;
+
+      placedPositions.push({ x, y });
+      const span = document.createElement('span');
+      span.textContent = word;
+      span.style.left = x + 'px';
+      span.style.top = y + 'px';
+      span.style.transform = 'translate(-50%, -50%)';
+      span.style.fontSize = fontSize + 'px';
+      span.style.opacity = opacity;
+      span.style.animationDelay = delay + 's';
+      span.style.color = color;
+      container.appendChild(span);
+      return true;
+    }
+
+    let placed = 0;
+
+    // Outline words - sit right along the same curve as the drawn path (radiusFactor ~0.94-1.0, just inside the line)
+    for (let i = 0; i < outlineCount; i++) {
+      const t = (i / outlineCount) * Math.PI * 2;
+      const radiusFactor = 0.88 + Math.random() * 0.1;
+      const p = heartPoint(t);
+      const s = toScreen(p, radiusFactor);
+
+      const word = words[placed % words.length];
+      const ok = tryPlace(s.x, s.y, word, 12 + Math.random() * 4, 1, ['#ffffff', '#f0d9ff'][Math.floor(Math.random() * 2)], 2.6 + placed * 0.16);
+      if (ok) placed++;
+    }
+
+    // Inner fill words - scattered toward the center
+    let fillAttempts = 0;
+    while (placed < outlineCount + fillCount && fillAttempts < fillCount * 10) {
+      fillAttempts++;
+      const t = Math.random() * Math.PI * 2;
+      const radiusFactor = 0.15 + Math.random() * 0.65;
+      const p = heartPoint(t);
+      const s = toScreen(p, radiusFactor);
+
+      const word = words[placed % words.length];
+      const ok = tryPlace(s.x, s.y, word, 9 + Math.random() * 5, 0.65, ['#e0c3f5', '#d9a8f0'][Math.floor(Math.random() * 2)], 2.6 + placed * 0.16);
+      if (ok) placed++;
+    }
+
+    // Sparkles
+    for (let i = 0; i < 45; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const size = 2 + Math.random() * 3;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDuration = (2 + Math.random() * 3) + 's';
+      s.style.animationDelay = Math.random() * 3 + 's';
+      document.body.appendChild(s);
+    }
+  </script>
+
+</body>
+</html>
